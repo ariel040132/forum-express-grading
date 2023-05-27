@@ -149,6 +149,7 @@ const userController = {
     }).then(() => res.redirect('back'))
       .catch(err => next(err))
   }
+
 }
 
 module.exports = userController
