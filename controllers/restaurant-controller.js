@@ -12,15 +12,6 @@ const restaurantController = {
       where: {
         ...categoryId ? { categoryId } : {}
       },
-      // const where = {}
-      // if (categoryId) where.categoryId = categoryId
-      // Promise.all({
-      // Restaurant.findAll({
-      // include: Category,
-      // where: where,
-      // nest: true,
-      // raw: true
-      // }),
       limit,
       offset,
       nest: true,
@@ -36,7 +27,7 @@ const restaurantController = {
           isFavorited: favoritedRestaurantsId.includes(r.id),
           isLiked: likedRestaurantsId.includes(r.id)
         }))
-        return res.render('restaurants', {
+        res.render('restaurants', {
           restaurants: data, categories, categoryId, pagination: getPagination(limit, page, restaurants.count)
         })
       })

@@ -11,7 +11,7 @@ const commentController = {
       .then(([user, restaurant]) => {
         if (!user) throw new Error("User didn't exist!")
         if (!restaurant) throw new Error("Restaurant didn't exist!")
-        return Comment.create({
+        Comment.create({
           text,
           restaurantId,
           userId
@@ -26,7 +26,7 @@ const commentController = {
     return Comment.findByPk(req.params.id)
       .then(comment => {
         if (!comment) throw new Error("Comment didn't exist!")
-        return comment.destroy()
+        comment.destroy()
       })
       .then(deletedComment => res.redirect(`/restaurants/${deletedComment.restaurantId}`))
       .catch(err => next(err))

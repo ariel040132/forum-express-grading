@@ -8,10 +8,10 @@ const userController = {
   },
   signUp: (req, res, next) => {
     if (req.body.password !== req.body.passwordCheck) throw new Error('Passwords do not match!')
-    User.findOne({ where: { email: req.body.email } })
+    return User.findOne({ where: { email: req.body.email } })
       .then(user => {
         if (user) throw new Error('Email already exists!')
-        return bcrypt.hash(req.body.password, 10) // 前面加 return
+        return bcrypt.hash(req.body.password, 10)
       })
       .then(hash => User.create({
         name: req.body.name,
@@ -54,7 +54,7 @@ const userController = {
         nest: true
       })]).then(([user, comments, favorites]) => {
       if (!user) throw new Error("User doesn't exist!")
-      return res.render('users/profile', { user, comments, favorites })
+      res.render('users/profile', { user, comments, favorites })
     }).catch(err => next(err))
   },
   editUser: (req, res, next) => {
@@ -79,7 +79,7 @@ const userController = {
       .then(([user, filePath]) => {
         if (!user) throw new Error("User didn't exist!")
 
-        return user.update({
+        user.update({
           name: req.body.name,
           image: filePath || user.image
         })
@@ -100,7 +100,7 @@ const userController = {
     })]).then(([restaurant, favorite]) => {
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       if (favorite) throw new Error('You have favorited this restaurant!')
-      return Favorite.create({
+      Favorite.create({
         userId: req.user.id,
         restaurantId
       })
@@ -116,7 +116,7 @@ const userController = {
       .then(favorite => {
         if (!favorite) throw new Error("You haven't favorited this restaurant")
 
-        return favorite.destroy()
+        favorite.destroy()
       })
       .then(() => res.redirect('back'))
       .catch(err => next(err))
@@ -131,7 +131,7 @@ const userController = {
     })]).then(([restaurant, like]) => {
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       if (like) throw new Error('You have liked this restaurant!')
-      return Like.create({
+      Like.create({
         userId: req.user.id,
         restaurantId
       })
@@ -145,7 +145,7 @@ const userController = {
       }
     }).then(like => {
       if (!like) throw new Error("You haven't liked this restaurant")
-      return like.destroy()
+      like.destroy()
     }).then(() => res.redirect('back'))
       .catch(err => next(err))
   }
