@@ -79,7 +79,7 @@ const userController = {
       .then(([user, filePath]) => {
         if (!user) throw new Error("User didn't exist!")
 
-        user.update({
+        return user.update({
           name: req.body.name,
           image: filePath || user.image
         })
@@ -100,11 +100,13 @@ const userController = {
     })]).then(([restaurant, favorite]) => {
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       if (favorite) throw new Error('You have favorited this restaurant!')
-      Favorite.create({
+      return Favorite.create({
         userId: req.user.id,
         restaurantId
       })
-    }).then(() => res.redirect('back')).catch(err => next(err))
+    })
+      .then(() => res.redirect('back'))
+      .catch(err => next(err))
   },
   removeFavorite: (req, res, next) => {
     return Favorite.findOne({
@@ -116,7 +118,7 @@ const userController = {
       .then(favorite => {
         if (!favorite) throw new Error("You haven't favorited this restaurant")
 
-        favorite.destroy()
+        return favorite.destroy()
       })
       .then(() => res.redirect('back'))
       .catch(err => next(err))
