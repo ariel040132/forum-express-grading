@@ -1,9 +1,21 @@
 const express = require('express')
 const router = express.Router()
-const restaurantController = require('../../controllers/apis/restaurant-controller')
-const adminController = require('../../controllers/apis/admin-controller')
 
-router.get('/admin/restaurants', adminController.getRestaurants)
-router.get('/restaurants', restaurantController.getRestaurants)
+// const passport = require('../../config/passport')
+
+const admin = require('./modules/admin')
+
+const restController = require('../../controllers/apis/restaurant-controller')
+// const userController = require('../../controllers/apis/user-controller')
+
+// const { authenticated, authenticatedAdmin } = require('../../middleware/api-auth')
+const { apiErrorHandler } = require('../../middleware/error-handler')
+
+router.use('/admin', admin)
+
+router.get('/restaurants', restController.getRestaurants)
+
+// router.post('/signin', passport.authenticate('local', { session: false }), userController.signIn)
+router.use('/', apiErrorHandler)
 
 module.exports = router
